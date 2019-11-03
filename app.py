@@ -50,7 +50,8 @@ def unknown(update, context):
 
 # Opencv
 def callback_cv(update, context):
-    global img_file, hsv
+    img_file = None
+    hsv = None
 
     def send_cv_frame(frame):
         cv2.imwrite('temp.png', frame)
@@ -81,7 +82,8 @@ def callback_cv(update, context):
             send_cv_frame(grey)
 
     elif re.search(HSV, cmd):
-        send_cv_frame(hsv)
+        if hsv is not None:
+            send_cv_frame(hsv)
 
     elif re.search(RED, cmd):
         if len(bgr.shape) > 1:
@@ -98,15 +100,15 @@ def callback_cv(update, context):
             blue = bgr[:, :, 0]
             send_cv_frame(blue)
 
-    elif re.search(HUE, cmd):
+    elif re.search(HUE, cmd) and hsv is not None:
         hue = hsv[:, :, 0]
         send_cv_frame(hue)
 
-    elif re.search(SAT, cmd):
+    elif re.search(SAT, cmd) and hsv is not None:
         sat = hsv[:, :, 1]
         send_cv_frame(sat)
 
-    elif re.search(VAL, cmd):
+    elif re.search(VAL, cmd) and hsv is not None:
         val = hsv[:, :, 2]
         send_cv_frame(val)
 
