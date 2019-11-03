@@ -1,6 +1,7 @@
-import cv2.cv2 as cv
+import cv2
 import logging
 import re
+import os
 import numpy as np
 from telegram.ext import (
     Updater,
@@ -10,7 +11,7 @@ from telegram.ext import (
 )
 
 # OpenCV bot auth token
-TOKEN = "627173302:AAFjnjW-UoIdSfkHSJ4lco9bqA6ix48Og3Y"
+TOKEN = os.environ['TELEGRAM_TOKEN']
 
 # OpenCV Regex
 # Color
@@ -47,7 +48,7 @@ def callback_cv(update, context):
     global img_file
 
     def send_cv_frame(frame):
-        cv.imwrite('temp.png', frame)
+        cv2.imwrite('temp.png', frame)
         context.bot.send_photo(
             chat_id=update.effective_chat.id,
             photo=open('temp.png', 'rb'))
@@ -64,11 +65,11 @@ def callback_cv(update, context):
     logging.info(f"Command: {cmd}")
 
     img_file.download("img.png")
-    bgr = cv.imread("img.png", 1)
+    bgr = cv2.imread("img.png", 1)
 
     if re.search(GRAY, cmd):
         if len(bgr.shape) > 1:
-            grey = cv.cvtColor(bgr, cv.COLOR_BGR2GRAY)
+            grey = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
             send_cv_frame(grey)
 
     elif re.search(RED, cmd):
@@ -89,7 +90,7 @@ def callback_cv(update, context):
     elif re.search(BLUR, cmd):
         command = cmd.split(" ")
         ksize = int(command[1])
-        blur = cv.blur(bgr, (ksize, ksize))
+        blur = cv2.blur(bgr, (ksize, ksize))
         send_cv_frame(blur)
 
     elif re.search(SHARP, cmd):
@@ -98,10 +99,12 @@ def callback_cv(update, context):
         if " " in cmd:
             command = cmd.split(" ")
             i = int(command[1])
+            if i > 100:
+                i = 100
         else:
             i = 1
         for i in range(1, i):
-            img = cv.filter2D(img, -1, kernel)
+            img = cv2.filter2D(img, -1, kernel)
 
         send_cv_frame(img)
 
@@ -114,7 +117,7 @@ def main():
 
     # handlers
     start_handler = CommandHandler("start", start)
-    unknown_handler = MessageHandler(Filters.reply, unknown)
+    unknown_handler = MessageHandler(Filters.command, unknown)
     image_handler = MessageHandler(Filters.photo | Filters.reply, callback_cv)
 
     # dispatchers
