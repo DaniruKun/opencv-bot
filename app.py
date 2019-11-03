@@ -1,0 +1,130 @@
+import cv2.cv2 as cv
+import logging
+import re
+import numpy as np
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+)
+
+# OpenCV bot auth token
+TOKEN = "627173302:AAFjnjW-UoIdSfkHSJ4lco9bqA6ix48Og3Y"
+
+# OpenCV Regex
+# Color
+GRAY = r"(?i)gr[ea]y"
+# Get specific channel
+RED = r"(?i)red"
+GREEN = r"(?i)green"
+BLUE = r"(?i)blue"
+
+BLUR = r"(?i)blur"
+SHARP = r"(?i)sharp"
+
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+
+
+def start(update, context):
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="I am the OpenCV bot! Please send me something",
+    )
+
+
+def unknown(update, context):
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="Sorry, I didn't understand that command.",
+    )
+
+
+# Opencv
+def callback_cv(update, context):
+    global img_file
+
+    def send_cv_frame(frame):
+        cv.imwrite('temp.png', frame)
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=open('temp.png', 'rb'))
+
+    cmd = ""
+    if update.effective_message.caption is not None:
+        cmd = update.effective_message.caption
+        img_file = context.bot.get_file(update.message.photo[-1].file_id)
+    elif update.effective_message.text is not None:
+        cmd = update.effective_message.text
+        img_file = context.bot.get_file(update.message.reply_to_message.photo[-1].file_id)
+
+    logging.info(f"Message: {update.message}")
+    logging.info(f"Command: {cmd}")
+
+    img_file.download("img.png")
+    bgr = cv.imread("img.png", 1)
+
+    if re.search(GRAY, cmd):
+        if len(bgr.shape) > 1:
+            grey = cv.cvtColor(bgr, cv.COLOR_BGR2GRAY)
+            send_cv_frame(grey)
+
+    elif re.search(RED, cmd):
+        if len(bgr.shape) > 1:
+            red = bgr[:, :, 2]
+            send_cv_frame(red)
+
+    elif re.search(GREEN, cmd):
+        if len(bgr.shape) > 1:
+            green = bgr[:, :, 1]
+            send_cv_frame(green)
+
+    elif re.search(BLUE, cmd):
+        if len(bgr.shape) > 1:
+            blue = bgr[:, :, 0]
+            send_cv_frame(blue)
+
+    elif re.search(BLUR, cmd):
+        command = cmd.split(" ")
+        ksize = int(command[1])
+        blur = cv.blur(bgr, (ksize, ksize))
+        send_cv_frame(blur)
+
+    elif re.search(SHARP, cmd):
+        kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
+        img = bgr
+        if " " in cmd:
+            command = cmd.split(" ")
+            i = int(command[1])
+        else:
+            i = 1
+        for i in range(1, i):
+            img = cv.filter2D(img, -1, kernel)
+
+        send_cv_frame(img)
+
+
+def main():
+    updater = Updater(TOKEN, use_context=True)
+    j = updater.job_queue
+
+    dispatcher = updater.dispatcher
+
+    # handlers
+    start_handler = CommandHandler("start", start)
+    unknown_handler = MessageHandler(Filters.reply, unknown)
+    image_handler = MessageHandler(Filters.photo | Filters.reply, callback_cv)
+
+    # dispatchers
+    dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(unknown_handler)
+    dispatcher.add_handler(image_handler)
+
+    updater.start_polling()
+    updater.idle()
+
+
+if __name__ == "__main__":
+    main()
