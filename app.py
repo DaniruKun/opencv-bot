@@ -22,9 +22,9 @@ RED = r"(?i)red"
 GREEN = r"(?i)green"
 BLUE = r"(?i)blue"
 
-HUE = "r(?i)hue"
-SAT = "r(?i)sat"
-VAL = "r(?i)val"
+HUE = r"(?i)hue"
+SAT = r"(?i)sat"
+VAL = r"(?i)val"
 
 BLUR = r"(?i)blur"
 SHARP = r"(?i)sharp"
