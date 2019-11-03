@@ -3,15 +3,10 @@ import logging
 import re
 import os
 import numpy as np
-from telegram.ext import (
-    Updater,
-    CommandHandler,
-    MessageHandler,
-    Filters,
-)
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # OpenCV bot auth token
-TOKEN = os.environ['TELEGRAM_TOKEN']
+TOKEN = os.environ["TELEGRAM_TOKEN"]
 
 # OpenCV Regex
 # Color
@@ -28,6 +23,10 @@ VAL = r"(?i)val"
 
 BLUR = r"(?i)blur"
 SHARP = r"(?i)sharp"
+
+ROTATE = r"(?i)rot"
+ROT_CW = r"(?i)right|cw"
+ROT_CCW = r"(?i)left|ccw"
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -54,10 +53,10 @@ def callback_cv(update, context):
     hsv = None
 
     def send_cv_frame(frame):
-        cv2.imwrite('temp.png', frame)
+        cv2.imwrite("temp.png", frame)
         context.bot.send_photo(
-            chat_id=update.effective_chat.id,
-            photo=open('temp.png', 'rb'))
+            chat_id=update.effective_chat.id, photo=open("temp.png", "rb")
+        )
 
     cmd = ""
     if update.effective_message.caption is not None:
@@ -65,7 +64,9 @@ def callback_cv(update, context):
         img_file = context.bot.get_file(update.message.photo[-1].file_id)
     elif update.effective_message.text is not None:
         cmd = update.effective_message.text
-        img_file = context.bot.get_file(update.message.reply_to_message.photo[-1].file_id)
+        img_file = context.bot.get_file(
+            update.message.reply_to_message.photo[0].file_id
+        )
 
     logging.info(f"Message: {update.message}")
     logging.info(f"Command: {cmd}")
@@ -132,6 +133,18 @@ def callback_cv(update, context):
             img = cv2.filter2D(img, -1, kernel)
 
         send_cv_frame(img)
+
+    elif re.search(ROTATE, cmd):
+        dst = None
+        if not (re.search(ROT_CW, cmd) or re.search(ROT_CCW, cmd)):
+            dst = cv2.rotate(bgr, cv2.ROTATE_90_CLOCKWISE)
+        elif re.search(ROT_CW, cmd):
+            dst = cv2.rotate(bgr, cv2.ROTATE_90_CLOCKWISE)
+        elif re.search(ROT_CCW, cmd):
+            dst = cv2.rotate(bgr, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+        send_cv_frame(dst)
+
     else:
         return
 

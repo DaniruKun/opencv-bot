@@ -1,5 +1,6 @@
 # OpenCV Telegram Bot
 This is a simple Telegram bot that allows you to execute simple, common OpenCV functions and algorithms right in Telegram.
+Uses [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot).
 
 ## Usage
 
@@ -47,3 +48,7 @@ Applies a blur kernel filter of size `w` x `h` over image (as provided in msg te
 `sharp` | `sharp 3`
 
 Applies a sharp kernel filter over image (`n` times if specified, separated by a space, max = `100`)
+
+`rotate` | `rotate cw | ccw` | `rotate left | right`
+
+Rotate the image clockwise/anticlockwise by 90 degree increments
