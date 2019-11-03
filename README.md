@@ -61,6 +61,14 @@ Normalize the image
 
 Calculate image gradients and draw as greyscale image
 
+`histeq` | `contrast`
+
+Perform histogram equalization of the image
+
+`dft`
+
+Discrete Fourier Transform
+
 ## TODO
 
 - Add better parsing of commands
