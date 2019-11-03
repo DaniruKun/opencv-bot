@@ -38,7 +38,8 @@ norm = lambda frame: cv2.normalize(frame, None, 0, 255, cv2.NORM_MINMAX)
 
 def get_sobel(frame):
     ddepth = cv2.CV_16S
-    scale = 1; delta = 0
+    scale = 1;
+    delta = 0
     grad_x = cv2.Sobel(grey(frame), ddepth, 1, 0, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
     grad_y = cv2.Sobel(grey(frame), ddepth, 0, 1, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
     abs_grad_x = cv2.convertScaleAbs(grad_x)
@@ -135,9 +136,6 @@ def unknown(update, context):
 
 
 def callback_cv(update, context):
-    img_file = None
-    hsv = None
-
     def send_cv_frame(frame):
         cv2.imwrite("temp.png", frame)
         context.bot.send_photo(
@@ -145,6 +143,7 @@ def callback_cv(update, context):
         )
 
     cmd = ""
+    img_file = None
     if update.effective_message.caption is not None:
         cmd = update.effective_message.caption
         img_file = context.bot.get_file(update.message.photo[-1].file_id)
@@ -153,23 +152,27 @@ def callback_cv(update, context):
         img_file = context.bot.get_file(
             update.message.reply_to_message.photo[-1].file_id
         )
-    command_list = cmd.split(' ')
+    img_file.download("img.png")
+    img = cv2.imread("img.png", 1)
+
+    command_list: list = cmd.split(' ')
 
     func: callable = None
-
+    args: list = None
+    res = None
     for command in commands:
         if re.search(command[1], command_list[0]):
             func = command[2]  # assign the callable func from command dictionary
 
-    args: list = command_list[1:]
+    if len(command_list) > 1:
+        args.append(command_list[1:])
 
-    img_file.download("img.png")
-    img = cv2.imread("img.png", 1)
     if args is not None:
         res = func(img, args)
-    else:
+    elif args is None:
         res = func(img)
     send_cv_frame(res)
+
 
 def main():
     updater = Updater(TOKEN, use_context=True)
