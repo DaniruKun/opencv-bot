@@ -132,6 +132,8 @@ def callback_cv(update, context):
             img = cv2.filter2D(img, -1, kernel)
 
         send_cv_frame(img)
+    else:
+        return
 
 
 def main():
