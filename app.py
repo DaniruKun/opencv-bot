@@ -201,9 +201,9 @@ def callback_cv(update, context):
         tmp = np.copy(q1)  # swap quadrant (Top-Right with Bottom-Left)
         magI[cx:cx + cx, 0:cy] = q2
         magI[0:cx, cy:cy + cy] = tmp
-        cv2.normalize(magI, magI, 0, 1, cv2.NORM_MINMAX)  # Transform the matrix with float values into a
+        res = 20 * np.log(magI)
 
-        send_cv_frame(magI)
+        send_cv_frame(res)
 
     elif re.search(ROTATE, cmd):
         dst = None
@@ -229,12 +229,12 @@ def main():
     # handlers
     start_handler = CommandHandler("start", start)
     unknown_handler = MessageHandler(Filters.command, unknown)
-    image_handler = MessageHandler(Filters.photo | Filters.reply, callback_cv)
+    cv_handler = MessageHandler(Filters.photo | Filters.reply, callback_cv)
 
     # dispatchers
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(unknown_handler)
-    dispatcher.add_handler(image_handler)
+    dispatcher.add_handler(cv_handler)
 
     updater.start_polling()
     updater.idle()
