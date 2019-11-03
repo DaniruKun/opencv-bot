@@ -90,35 +90,26 @@ def callback_cv(update, context):
         if hsv is not None:
             send_cv_frame(hsv)
 
-    elif re.search(RED, cmd):
-        if len(bgr.shape) > 1:
-            red = bgr[:, :, 2]
-            send_cv_frame(red)
+    elif re.search(RED, cmd) and len(bgr.shape) > 1:
+        send_cv_frame(bgr[:, :, 2])
 
-    elif re.search(GREEN, cmd):
-        if len(bgr.shape) > 1:
-            green = bgr[:, :, 1]
-            send_cv_frame(green)
+    elif re.search(GREEN, cmd) and len(bgr.shape) > 1:
+        send_cv_frame(bgr[:, :, 1])
 
     elif re.search(BLUE, cmd):
-        if len(bgr.shape) > 1:
-            blue = bgr[:, :, 0]
-            send_cv_frame(blue)
+        send_cv_frame(bgr[:, :, 0])
 
     elif re.search(HUE, cmd) and hsv is not None:
-        hue = hsv[:, :, 0]
-        send_cv_frame(hue)
+        send_cv_frame(hsv[:, :, 0])
 
     elif re.search(SAT, cmd) and hsv is not None:
-        sat = hsv[:, :, 1]
-        send_cv_frame(sat)
+        send_cv_frame(hsv[:, :, 1])
 
     elif re.search(VAL, cmd) and hsv is not None:
-        val = hsv[:, :, 2]
-        send_cv_frame(val)
+        send_cv_frame(hsv[:, :, 2])
 
     elif re.search(BLUR, cmd):
-        command = cmd.split(" ")
+        command = cmd.split(" ")  # TODO: use regex to find kernel size ints
         ksize = int(command[1])
         blur = cv2.blur(bgr, (ksize, ksize))
         send_cv_frame(blur)
