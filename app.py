@@ -23,6 +23,8 @@ VAL = r"(?i)val"
 
 BLUR = r"(?i)blur"
 SHARP = r"(?i)sharp"
+NORM = r"(?i)norm"
+SOBEL = r"(?i)sobel"
 
 ROTATE = r"(?i)rot"
 ROT_CW = r"(?i)right|cw"
@@ -65,7 +67,7 @@ def callback_cv(update, context):
     elif update.effective_message.text is not None:
         cmd = update.effective_message.text
         img_file = context.bot.get_file(
-            update.message.reply_to_message.photo[0].file_id
+            update.message.reply_to_message.photo[-1].file_id
         )
 
     logging.info(f"Message: {update.message}")
@@ -133,6 +135,24 @@ def callback_cv(update, context):
             img = cv2.filter2D(img, -1, kernel)
 
         send_cv_frame(img)
+
+    elif re.search(NORM, cmd):
+        normed = cv2.normalize(bgr, None, 0, 255, cv2.NORM_MINMAX)
+        send_cv_frame(normed)
+
+    elif re.search(SOBEL, cmd):
+        ddepth = cv2.CV_16S
+        scale = 1
+        delta = 0
+
+        grey = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+        grad_x = cv2.Sobel(grey, ddepth, 1, 0, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
+        grad_y = cv2.Sobel(grey, ddepth, 0, 1, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
+        abs_grad_x = cv2.convertScaleAbs(grad_x)
+        abs_grad_y = cv2.convertScaleAbs(grad_y)
+        grad = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+
+        send_cv_frame(grad)
 
     elif re.search(ROTATE, cmd):
         dst = None

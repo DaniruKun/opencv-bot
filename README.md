@@ -52,3 +52,20 @@ Applies a sharp kernel filter over image (`n` times if specified, separated by a
 `rotate` | `rotate cw | ccw` | `rotate left | right`
 
 Rotate the image clockwise/anticlockwise by 90 degree increments
+
+`norm`
+
+Normalize the image
+
+`sobel`
+
+Calculate image gradients and draw as greyscale image
+
+## TODO
+
+- Add better parsing of commands
+- Increase safety of functions and handlers
+- Add more command functionality
+- Add more common functions
+- Improve logging
+- Add interactive mode
