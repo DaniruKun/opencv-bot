@@ -2,6 +2,7 @@ certifi==2019.9.11
 cffi==1.13.1
 cryptography==2.8
 future==0.18.2
+gunicorn==19.9.0
 numpy==1.17.3
 opencv-python-headless==3.4.6.27
 pycparser==2.19
