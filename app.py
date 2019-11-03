@@ -16,10 +16,15 @@ TOKEN = os.environ['TELEGRAM_TOKEN']
 # OpenCV Regex
 # Color
 GRAY = r"(?i)gr[ea]y"
+HSV = r"(?i)hsv"
 # Get specific channel
 RED = r"(?i)red"
 GREEN = r"(?i)green"
 BLUE = r"(?i)blue"
+
+HUE = "r(?i)hue"
+SAT = "r(?i)sat"
+VAL = "r(?i)val"
 
 BLUR = r"(?i)blur"
 SHARP = r"(?i)sharp"
@@ -45,7 +50,7 @@ def unknown(update, context):
 
 # Opencv
 def callback_cv(update, context):
-    global img_file
+    global img_file, hsv
 
     def send_cv_frame(frame):
         cv2.imwrite('temp.png', frame)
@@ -67,10 +72,16 @@ def callback_cv(update, context):
     img_file.download("img.png")
     bgr = cv2.imread("img.png", 1)
 
+    if len(bgr.shape) > 1:
+        hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
+
     if re.search(GRAY, cmd):
         if len(bgr.shape) > 1:
             grey = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
             send_cv_frame(grey)
+
+    elif re.search(HSV, cmd):
+        send_cv_frame(hsv)
 
     elif re.search(RED, cmd):
         if len(bgr.shape) > 1:
@@ -86,6 +97,18 @@ def callback_cv(update, context):
         if len(bgr.shape) > 1:
             blue = bgr[:, :, 0]
             send_cv_frame(blue)
+
+    elif re.search(HUE, cmd):
+        hue = hsv[:, :, 0]
+        send_cv_frame(hue)
+
+    elif re.search(SAT, cmd):
+        sat = hsv[:, :, 1]
+        send_cv_frame(sat)
+
+    elif re.search(VAL, cmd):
+        val = hsv[:, :, 2]
+        send_cv_frame(val)
 
     elif re.search(BLUR, cmd):
         command = cmd.split(" ")
