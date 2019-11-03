@@ -1,2 +1,10 @@
-python-telegram-bot==12.2.0
+certifi==2019.9.11
+cffi==1.13.1
+cryptography==2.8
+future==0.18.2
+numpy==1.17.3
 opencv-python-headless==3.4.6.27
+pycparser==2.19
+python-telegram-bot==12.2.0
+six==1.12.0
+tornado==6.0.3
