@@ -73,6 +73,10 @@ Perform histogram equalization of the image
 
 Discrete Fourier Transform
 
+`thresh bin | bininv | trunc | tozero | tozeroinv`
+
+Threshold the image using method of choice
+
 ## TODO
 
 - Add more command functionality
