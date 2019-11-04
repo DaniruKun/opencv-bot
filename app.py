@@ -52,6 +52,7 @@ def callback_cv(update, context):
 
     cmd = ""
     img_file = None
+    img = None
     if update.effective_message.caption is not None:
         cmd = update.effective_message.caption
         img_file = context.bot.get_file(update.message.photo[-1].file_id)
@@ -60,8 +61,9 @@ def callback_cv(update, context):
         img_file = context.bot.get_file(
             update.message.reply_to_message.photo[-1].file_id
         )
-    img_file.download("img.png")
-    img = cv2.imread("img.png", 1)
+    if img_file is not None:
+        img_file.download("img.png")
+        img = cv2.imread("img.png", 1)
 
     command_list: list = cmd.split(' ')
 
