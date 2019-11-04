@@ -1,8 +1,5 @@
-import cv2
 import logging
-import re
 import os
-import numpy as np
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from utils.imgproc import *
 
@@ -69,18 +66,19 @@ def callback_cv(update, context):
     command_list: list = cmd.split(' ')
 
     func: callable = None
-    args: list = None
-    res = None
+    arg = None
+
     for command in commands:
         if re.search(command[1], command_list[0]):
             func = command[2]  # assign the callable func from command dictionary
 
-    if len(command_list) > 1 and args is not None:
-        args.append(command_list[1:])
+    if len(command_list) > 1:
+        arg = command_list[1]
+    res = None
 
-    if args is not None:
-        res = func(img, args)
-    elif args is None:
+    if arg is not None:
+        res = func(img, arg)
+    elif arg is None:
         res = func(img)
     send_cv_frame(res)
 
