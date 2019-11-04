@@ -86,19 +86,19 @@ def get_dft(frame):
 
     magI_rows, magI_cols = magI.shape
     # crop the spectrum, if it has an odd number of rows or columns
-    magI = magI[0 : (magI_rows & -2), 0 : (magI_cols & -2)]
+    magI = magI[0: (magI_rows & -2), 0: (magI_cols & -2)]
     cx = int(magI_rows / 2)
     cy = int(magI_cols / 2)
     q0 = magI[0:cx, 0:cy]  # Top-Left - Create a ROI per quadrant
-    q1 = magI[cx : cx + cx, 0:cy]  # Top-Right
-    q2 = magI[0:cx, cy : cy + cy]  # Bottom-Left
-    q3 = magI[cx : cx + cx, cy : cy + cy]  # Bottom-Right
+    q1 = magI[cx: cx + cx, 0:cy]  # Top-Right
+    q2 = magI[0:cx, cy: cy + cy]  # Bottom-Left
+    q3 = magI[cx: cx + cx, cy: cy + cy]  # Bottom-Right
     tmp = np.copy(q0)  # swap quadrants (Top-Left with Bottom-Right)
     magI[0:cx, 0:cy] = q3
-    magI[cx : cx + cx, cy : cy + cy] = tmp
+    magI[cx: cx + cx, cy: cy + cy] = tmp
     tmp = np.copy(q1)  # swap quadrant (Top-Right with Bottom-Left)
-    magI[cx : cx + cx, 0:cy] = q2
-    magI[0:cx, cy : cy + cy] = tmp
+    magI[cx: cx + cx, 0:cy] = q2
+    magI[0:cx, cy: cy + cy] = tmp
     res = 20 * np.log(magI)
     return res
 
@@ -108,3 +108,23 @@ def get_rotated(frame, x='cw'):
         return cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
     elif re.search(r"(?i)(left)|^(c{2}w)", x):
         return cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+
+def get_threshold(frame, thresh_type):
+    types = [
+        [r"(?i)(^bin){1}", cv2.THRESH_BINARY],
+        [r"(?i)bininv", cv2.THRESH_BINARY_INV],
+        [r"(?i)trunc", cv2.THRESH_TRUNC],
+        [r"(?i)(^tozero){1}", cv2.THRESH_TOZERO],
+        [r"(?i)tozeroinv", cv2.THRESH_TOZERO_INV],
+    ]
+
+    if thresh_type is None:
+        thresh_type = cv2.THRESH_BINARY
+    else:
+        for _type in types:
+            if re.search(_type[0], str(thresh_type)):
+                thresh_type = _type[1]
+
+    _, thresh = cv2.threshold(grey(frame), 127, 255, thresh_type)
+    return thresh

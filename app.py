@@ -22,6 +22,7 @@ commands = [
     ['HISTEQ', r"(?i)histeq|contrast", histeq],
     ['DFT', r"(?i)fourier|dft", get_dft],
     ['ROTATE', r"(?i)rot", get_rotated],
+    ['THRESH', r"(?i)^thresh", get_threshold]
 ]
 
 logging.basicConfig(
