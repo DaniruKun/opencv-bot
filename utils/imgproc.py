@@ -13,15 +13,16 @@ val = lambda frame: hsv(frame)[:, :, 2]
 
 
 def get_blur(frame, ksize=3):
-    return cv2.blur(frame, (ksize, ksize))
+    return cv2.blur(frame, (int(ksize), int(ksize)))
 
 
 def get_sharp(frame, i=1):
     kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
     img = frame
-    if i > 10:
-        i = 10
-    for i in range(1, i):
+    lvl = int(i)
+    if lvl > 10:
+        lvl = 10
+    for _ in range(1, lvl):
         img = cv2.filter2D(img, -1, kernel)
     return img
 
@@ -102,10 +103,8 @@ def get_dft(frame):
     return res
 
 
-def get_rotated(frame, x=None):
-    if x is None:
-        args = ["cw"]
-    if re.search(r"(?i)right|cw", x):
+def get_rotated(frame, x='cw'):
+    if re.search(r"(?i)right|^(c{1}w)", x):
         return cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-    elif re.search(r"(?i)left|ccw", x):
+    elif re.search(r"(?i)(left)|^(c{2}w)", x):
         return cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
