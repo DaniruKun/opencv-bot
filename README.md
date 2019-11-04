@@ -17,6 +17,8 @@ Add the bot to a group.
 
 ### Commands
 
+Commands are in function - argument pairs
+
 `gray`
 Converts given or replied to photo to greyscale
 
@@ -41,13 +43,13 @@ Extract saturation channel from an RGB/BGR image and returns single channel imag
 `val`
 Extract value/luminance channel from an RGB/BGR image and returns single channel image
 
-`blur 3` | `blur 3 3`
+`blur 3` | `blur 3`
 
 Applies a blur kernel filter of size `w` x `h` over image (as provided in msg text with spaces)
 
 `sharp` | `sharp 3`
 
-Applies a sharp kernel filter over image (`n` times if specified, separated by a space, max = `100`)
+Applies a sharp kernel filter over image (`n` times if specified, separated by a space, max = `10`)
 
 `rotate` | `rotate cw | ccw` | `rotate left | right`
 
@@ -71,8 +73,6 @@ Discrete Fourier Transform
 
 ## TODO
 
-- Add better parsing of commands
-- Increase safety of functions and handlers
 - Add more command functionality
 - Add more common functions
 - Improve logging
