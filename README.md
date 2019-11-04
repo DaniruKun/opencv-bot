@@ -17,6 +17,8 @@ Add the bot to a group.
 
 ### Commands
 
+Commands are in function - argument pairs
+
 `gray`
 Converts given or replied to photo to greyscale
 
