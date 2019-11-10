@@ -45,7 +45,7 @@ Extract saturation channel from an RGB/BGR image and returns single channel imag
 `val`
 Extract value/luminance channel from an RGB/BGR image and returns single channel image
 
-`blur 3` | `blur 3`
+`blur 3`
 
 Applies a blur kernel filter of size `w` x `h` over image (as provided in msg text with spaces)
 

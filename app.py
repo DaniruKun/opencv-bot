@@ -1,5 +1,7 @@
 import logging
 import os
+
+import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from utils.imgproc import *
 
@@ -37,6 +39,93 @@ def start(update, context):
     )
 
 
+def _help(update, context):
+    help_msg = """
+    To use the bot, either:
+    - Add to a group
+    - Message the bot directly at `@opencvtbot`
+    ## How to use:
+    Send a photo to the bot directly or in a group where the bot is present.
+    There are 2 ways to call a function:
+    - Add the function with arguments in photo *caption*
+    - Text in *reply* to a photo
+    To see list of available commands, call `/commands`
+    
+    """
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        parse_mode=telegram.ParseMode.MARKDOWN,
+        text=help_msg
+    )
+
+
+def _commands(update, context):
+    command_list = """
+    Commands are in function - argument pairs
+    
+    `gray`
+    Converts given or replied to photo to greyscale
+    
+    `hsv`
+    Converts given RGB image to HSV
+    
+    `red`
+    Extracts red color channel from an RGB/BGR image and returns single channel image
+    
+    `green`
+    Extracts green color channel from an RGB/BGR image and returns single channel image
+    
+    `blue`
+    Extracts blue color channel from an RGB/BGR image and returns single channel image
+    
+    `hue`
+    Extract hue channel from an HSV image and returns single channel image
+    
+    `sat`
+    Extract saturation channel from an RGB/BGR image and returns single channel image
+    
+    `val`
+    Extract value/luminance channel from an RGB/BGR image and returns single channel image
+    
+    `blur 3`
+    
+    Applies a blur kernel filter of size `w` x `h` over image (as provided in msg text with spaces)
+    
+    `sharp` | `sharp 3`
+    
+    Applies a sharp kernel filter over image (`n` times if specified, separated by a space, max = `10`)
+    
+    `rotate` | `rotate cw | ccw` | `rotate left | right`
+    
+    Rotate the image clockwise/anticlockwise by 90 degree increments
+    
+    `norm`
+    
+    Normalize the image
+    
+    `sobel`
+    
+    Calculate image gradients and draw as greyscale image
+    
+    `histeq` | `contrast`
+    
+    Perform histogram equalization of the image
+    
+    `dft`
+    
+    Discrete Fourier Transform
+    
+    `thresh bin | bininv | trunc | tozero | tozeroinv`
+    
+    Threshold the image using method of choice
+    """
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        parse_mode=telegram.ParseMode.MARKDOWN,
+        text=command_list
+    )
+
+
 def unknown(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
@@ -71,7 +160,7 @@ def callback_cv(update, context):
     func: callable = None
     arg = None
 
-    for command in commands:
+    for command in _commands:
         if re.search(command[1], command_list[0]):
             func = command[2]  # assign the callable func from command dictionary
 
@@ -94,11 +183,15 @@ def main():
 
     # handlers
     start_handler = CommandHandler("start", start)
+    help_handler = CommandHandler("help", _help)
+    commands_handler = CommandHandler("commands", _commands)
     unknown_handler = MessageHandler(Filters.command, unknown)
     cv_handler = MessageHandler(Filters.photo | Filters.reply, callback_cv)
 
     # dispatchers
     dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(help_handler)
+    dispatcher.add_handler(commands_handler)
     dispatcher.add_handler(unknown_handler)
     dispatcher.add_handler(cv_handler)
 
