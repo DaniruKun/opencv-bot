@@ -81,5 +81,4 @@ Threshold the image using method of choice
 
 - Add more command functionality
 - Add more common functions
-- Improve logging
 - Add interactive mode

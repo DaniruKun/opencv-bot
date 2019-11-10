@@ -1,5 +1,5 @@
-import logging
 import os
+import logging
 
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -51,24 +51,30 @@ def _help(update, context):
     - Text in *reply* to a photo
     To see list of available commands, call `/commands`
     """
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        parse_mode=telegram.ParseMode.MARKDOWN,
-        text=help_msg
-    )
-
-
-def _commands(update, context):
-    with open(os.getcwd() + '/docs/commands_list', 'r') as f:
-        command_list = """"""
-        for line in f:
-            command_list += line
-
+    try:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             parse_mode=telegram.ParseMode.MARKDOWN,
-            text=command_list
+            text=help_msg
         )
+    except:
+        logging.info(f'Failed to send help message to {update.effective_chat.id}!')
+
+
+def _commands(update, context):
+    try:
+        with open(os.getcwd() + '/docs/commands_list', 'r') as f:
+            command_list = """"""
+            for line in f:
+                command_list += line
+
+            context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                parse_mode=telegram.ParseMode.MARKDOWN,
+                text=command_list
+            )
+    except:
+        logging.info(f'Failed to send command list to {update.effective_chat.id}!')
 
 
 def unknown(update, context):
@@ -80,11 +86,17 @@ def unknown(update, context):
 
 def callback_cv(update, context):
     def send_cv_frame(frame):
-        cv2.imwrite("temp.png", frame)  # temporarily dump the iamge to disk
-        context.bot.send_photo(
-            chat_id=update.effective_chat.id, photo=open("temp.png", "rb")
-        )
-        os.remove('temp.png')
+        if frame is not None:
+            try:
+                cv2.imwrite("temp.png", frame)  # temporarily dump the iamge to disk
+            except:
+                logging.info('Failed to dump temp frame to disk as file!')
+            context.bot.send_photo(
+                chat_id=update.effective_chat.id, photo=open("temp.png", "rb")
+            )
+            os.remove('temp.png')
+        else:
+            logging.info('Cannot send empty frame!')
 
     cmd = ""
     img_file = None
@@ -98,7 +110,7 @@ def callback_cv(update, context):
             update.message.reply_to_message.photo[-1].file_id
         )
     if img_file is not None:
-        img_file.download("img.png")
+        img_file.download("img.png")  # temporarily dump image to file and read as OpenCV frame
         img = cv2.imread("img.png", 1)
 
     command_list: list = cmd.split(' ')
@@ -114,7 +126,7 @@ def callback_cv(update, context):
         arg = command_list[1]
     res = None
 
-    if arg is not None:
+    if arg is not None and img is not None:
         res = func(img, arg)
     elif arg is None:
         res = func(img)
