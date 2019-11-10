@@ -44,13 +44,12 @@ def _help(update, context):
     To use the bot, either:
     - Add to a group
     - Message the bot directly at `@opencvtbot`
-    ## How to use:
+    *How to use:*
     Send a photo to the bot directly or in a group where the bot is present.
     There are 2 ways to call a function:
     - Add the function with arguments in photo *caption*
     - Text in *reply* to a photo
     To see list of available commands, call `/commands`
-    
     """
     context.bot.send_message(
         chat_id=update.effective_chat.id,
@@ -61,7 +60,10 @@ def _help(update, context):
 
 def _commands(update, context):
     with open(os.getcwd() + '/docs/commands_list', 'r') as f:
-        command_list = f.readlines()
+        command_list = """"""
+        for line in f:
+            command_list += line
+
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             parse_mode=telegram.ParseMode.MARKDOWN,
