@@ -11,6 +11,9 @@ hue = lambda frame: hsv(frame)[:, :, 0]
 sat = lambda frame: hsv(frame)[:, :, 1]
 val = lambda frame: hsv(frame)[:, :, 2]
 
+norm = lambda frame: cv2.normalize(frame, None, 0, 255, cv2.NORM_MINMAX)
+histeq = lambda frame: cv2.equalizeHist(grey(frame))
+
 
 def get_blur(frame, ksize=3):
     return cv2.blur(frame, (int(ksize), int(ksize)))
@@ -25,9 +28,6 @@ def get_sharp(frame, i=1):
     for _ in range(1, lvl):
         img = cv2.filter2D(img, -1, kernel)
     return img
-
-
-norm = lambda frame: cv2.normalize(frame, None, 0, 255, cv2.NORM_MINMAX)
 
 
 def get_sobel(frame):
@@ -58,9 +58,6 @@ def get_sobel(frame):
     abs_grad_y = cv2.convertScaleAbs(grad_y)
     grad = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
     return grad
-
-
-histeq = lambda frame: cv2.equalizeHist(grey(frame))
 
 
 def get_dft(frame):

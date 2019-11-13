@@ -1,3 +1,4 @@
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/DaniruKun/opencv-bot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/DaniruKun/opencv-bot/context:python)
 # OpenCV Telegram Bot
 This is a simple Telegram bot that allows you to execute simple, common OpenCV functions and algorithms right in Telegram.
 Uses [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot).
@@ -76,6 +77,10 @@ Discrete Fourier Transform
 `thresh bin | bininv | trunc | tozero | tozeroinv`
 
 Threshold the image using method of choice
+
+### Further reading on OpenCV functions:
+
+[OpenCV Docs](https://docs.opencv.org/3.4/d6/d00/tutorial_py_root.html)
 
 ## TODO
 

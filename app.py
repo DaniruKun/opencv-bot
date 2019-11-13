@@ -1,9 +1,12 @@
 import os
+import cv2
 import logging
-
+import re
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from utils.imgproc import *
+from utils.imgproc import (hsv, grey, red, green, blue, hue, sat, val,
+                           get_blur, get_sharp, norm, get_sobel, histeq,
+                           get_dft, get_rotated, get_threshold)
 
 # OpenCV bot auth token
 TOKEN = os.environ["TELEGRAM_TOKEN"]
@@ -51,30 +54,24 @@ def _help(update, context):
     - Text in *reply* to a photo
     To see list of available commands, call `/commands`
     """
-    try:
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            parse_mode=telegram.ParseMode.MARKDOWN,
-            text=help_msg
-        )
-    except:
-        logging.info(f'Failed to send help message to {update.effective_chat.id}!')
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        parse_mode=telegram.ParseMode.MARKDOWN,
+        text=help_msg
+    )
 
 
 def _commands(update, context):
-    try:
-        with open(os.getcwd() + '/docs/commands_list', 'r') as f:
-            command_list = """"""
-            for line in f:
-                command_list += line
+    with open(os.getcwd() + '/docs/commands_list', 'r') as f:
+        command_list = """"""
+        for line in f:
+            command_list += line
 
-            context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                parse_mode=telegram.ParseMode.MARKDOWN,
-                text=command_list
-            )
-    except:
-        logging.info(f'Failed to send command list to {update.effective_chat.id}!')
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            parse_mode=telegram.ParseMode.MARKDOWN,
+            text=command_list
+        )
 
 
 def unknown(update, context):
@@ -135,8 +132,6 @@ def callback_cv(update, context):
 
 def main():
     updater = Updater(TOKEN, use_context=True)
-    j = updater.job_queue
-
     dispatcher = updater.dispatcher
 
     # handlers
