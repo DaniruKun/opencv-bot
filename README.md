@@ -22,6 +22,8 @@ Add the bot to a group.
 
 Commands are in function - argument pairs
 
+You can always find out the full list of commands by sending `/commands`
+
 `gray`
 Converts given or replied to photo to greyscale
 
