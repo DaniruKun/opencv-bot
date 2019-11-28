@@ -1,3 +1,3 @@
 from opencv_bot import app
 
-app.main()
+assert 1 == 1
