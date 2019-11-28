@@ -1,1 +1,1 @@
-worker: python3 -m opencv_bot
+worker: python3 -m main.py
