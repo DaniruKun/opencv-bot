@@ -4,9 +4,9 @@ import logging
 import re
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from utils.imgproc import (hsv, grey, red, green, blue, hue, sat, val,
-                           get_blur, get_sharp, norm, get_sobel, histeq,
-                           get_dft, get_rotated, get_threshold)
+from opencv_bot.utils.imgproc import (hsv, grey, red, green, blue, hue, sat, val,
+                                      get_blur, get_sharp, norm, get_sobel, histeq,
+                                      get_dft, get_rotated, get_threshold)
 
 # OpenCV bot auth token
 TOKEN = os.environ["TELEGRAM_TOKEN"]
