@@ -2,6 +2,7 @@ import os
 import cv2
 import logging
 import re
+import io
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from opencv_bot.utils.imgproc import (hsv, grey, red, green, blue, hue, sat, val,
@@ -84,14 +85,13 @@ def unknown(update, context):
 def callback_cv(update, context):
     def send_cv_frame(frame):
         if frame is not None:
-            try:
-                cv2.imwrite("temp.png", frame)  # temporarily dump the iamge to disk
-            except:
-                logging.info('Failed to dump temp frame to disk as file!')
+            buffer = io.BytesIO()
+            cv2.imwrite(buffer, frame)  # temporarily dump the iamge to disk
+            logging.info('Failed to dump temp frame to buffer!')
             context.bot.send_photo(
-                chat_id=update.effective_chat.id, photo=open("temp.png", "rb")
+                chat_id=update.effective_chat.id, photo=open(buffer.getvalue(), "rb")
             )
-            os.remove('temp.png')
+            # os.remove('temp.png')
         else:
             logging.info('Cannot send empty frame!')
 
