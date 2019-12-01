@@ -85,8 +85,7 @@ def unknown(update, context):
 def callback_cv(update, context):
     def send_cv_frame(frame):
         if frame is not None:
-            buffer = io.BytesIO()
-            cv2.imwrite(buffer, frame)  # temporarily dump the iamge to disk
+            _, buffer = cv2.imencode(".jpg", frame)  # temporarily dump the iamge to disk
             logging.info('Failed to dump temp frame to buffer!')
             context.bot.send_photo(
                 chat_id=update.effective_chat.id, photo=open(buffer.getvalue(), "rb")
