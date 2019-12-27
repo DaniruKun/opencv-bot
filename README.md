@@ -84,6 +84,9 @@ Threshold the image using method of choice
 
 [OpenCV Docs](https://docs.opencv.org/3.4/d6/d00/tutorial_py_root.html)
 
+### Donate and Support
+You can help support this by either making PRs, or also you can help me pay for hosting, as well as development expenses here: [PayPal Pool](https://paypal.me/pools/c/8laitMcxKO)
+
 ## TODO
 
 - Add more command functionality
