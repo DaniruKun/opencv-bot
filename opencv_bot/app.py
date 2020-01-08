@@ -88,7 +88,7 @@ def callback_cv(update, context):
             _, buffer = cv2.imencode(".jpg", frame)  # temporarily dump the iamge to disk
             logging.info('Failed to dump temp frame to buffer!')
             context.bot.send_photo(
-                chat_id=update.effective_chat.id, photo=open(buffer.getvalue(), "rb")
+                chat_id=update.effective_chat.id, photo=open(buffer, "rb")
             )
             # os.remove('temp.png')
         else:
@@ -106,8 +106,7 @@ def callback_cv(update, context):
             update.message.reply_to_message.photo[-1].file_id
         )
     if img_file is not None:
-        img_file.download("img.png")  # temporarily dump image to file and read as OpenCV frame
-        img = cv2.imread("img.png", 1)
+        img = img_file.download_as_bytearray()
 
     command_list: list = cmd.split(' ')
 
@@ -123,9 +122,9 @@ def callback_cv(update, context):
     res = None
 
     if arg is not None and img is not None:
-        res = func(img, arg)
+        res = func(img.decode(), arg)
     elif arg is None:
-        res = func(img)
+        res = func(img.decode())
     send_cv_frame(res)
 
 
