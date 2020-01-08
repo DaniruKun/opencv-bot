@@ -1,5 +1,6 @@
 import os
 import cv2
+from cv2.cv2 import imdecode
 import logging
 import re
 import io
@@ -122,9 +123,9 @@ def callback_cv(update, context):
     res = None
 
     if arg is not None and img is not None:
-        res = func(cv2.decode(img, 1), arg)
+        res = func(imdecode(img, 1), arg)
     elif arg is None:
-        res = func(cv2.decode(img, 1))
+        res = func(imdecode(img, 1))
     send_cv_frame(res)
 
 
