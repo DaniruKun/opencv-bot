@@ -122,9 +122,9 @@ def callback_cv(update, context):
     res = None
 
     if arg is not None and img is not None:
-        res = func(img.decode(), arg)
+        res = func(cv2.decode(img, 1), arg)
     elif arg is None:
-        res = func(img.decode())
+        res = func(cv2.decode(img, 1))
     send_cv_frame(res)
 
 
