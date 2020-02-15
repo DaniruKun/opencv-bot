@@ -108,7 +108,10 @@ def callback_cv(update, context):
         )
     if img_file is not None:
         img_file.download("img.png")  # temporarily dump image to file and read as OpenCV frame
-        img = cv2.imread("img.png", 1)
+        try:
+            img = cv2.imread("img.png", 1)
+        except:
+            img = cv2.cv2.imread("img.png", 1)
 
     command_list: list = cmd.split(' ')
 
@@ -123,11 +126,13 @@ def callback_cv(update, context):
         arg = command_list[1]
     res = None
 
-    if arg is not None and img is not None:
-        res = func(img, arg)
-    elif arg is None:
-        res = func(img)
-    send_cv_frame(res)
+    if func is not None:
+
+        if arg is not None and img is not None:
+            res = func(img, arg)
+        elif arg is None:
+            res = func(img)
+        send_cv_frame(res)
 
 
 def main():
