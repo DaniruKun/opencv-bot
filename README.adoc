@@ -3,7 +3,7 @@
 This is a simple Telegram bot that allows you to execute simple, common OpenCV functions and algorithms right in Telegram.
 Uses link:https://github.com/python-telegram-bot/python-telegram-bot[python-telegram-bot].
 
-image::docs/demo.png[Telegram demo, 400, 300]
+image::docs/demo.png[Telegram demo, 400]
 
 == Usage
 
