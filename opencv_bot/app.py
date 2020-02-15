@@ -85,7 +85,7 @@ def callback_cv(update, context):
     def send_cv_frame(frame):
         if frame is not None:
             try:
-                cv2.imwrite("temp.png", frame)  # temporarily dump the iamge to disk
+                cv2.imwrite("temp.png", frame)  # temporarily dump the image to disk
             except:
                 logging.info('Failed to dump temp frame to disk as file!')
             context.bot.send_photo(
@@ -98,14 +98,15 @@ def callback_cv(update, context):
     cmd = ""
     img_file = None
     img = None
+
     if update.effective_message.caption is not None:
         cmd = update.effective_message.caption
         img_file = context.bot.get_file(update.message.photo[-1].file_id)
     elif update.effective_message.text is not None:
         cmd = update.effective_message.text
         img_file = context.bot.get_file(
-            update.message.reply_to_message.photo[-1].file_id
-        )
+            update.message.reply_to_message.photo[-1].file_id)
+
     if img_file is not None:
         img_file.download("img.png")  # temporarily dump image to file and read as OpenCV frame
         try:
