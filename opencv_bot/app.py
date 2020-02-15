@@ -31,7 +31,8 @@ commands = [
 ]
 
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO,
+    filename='app.log'
 )
 
 
@@ -134,6 +135,7 @@ def callback_cv(update, context):
         elif arg is None:
             res = func(img)
         send_cv_frame(res)
+        logging.info("Processed image from user: ", update.effective_user)
 
 
 def main():
@@ -145,7 +147,7 @@ def main():
     help_handler = CommandHandler("help", _help)
     commands_handler = CommandHandler("commands", _commands)
     unknown_handler = MessageHandler(Filters.command, unknown)
-    cv_handler = MessageHandler(Filters.photo | Filters.reply, callback_cv)
+    cv_handler = MessageHandler(Filters.photo | Filters.reply | Filters.sticker, callback_cv)
 
     # dispatchers
     dispatcher.add_handler(start_handler)
