@@ -135,7 +135,7 @@ def callback_cv(update, context):
         elif arg is None:
             res = func(img)
         send_cv_frame(res)
-        logging.info("Processed image from user: ", update.effective_user)
+        logging.info("Processed image from user: %s with func: %s" % (update.effective_user, str(func.__name__)))
 
 
 def main():
