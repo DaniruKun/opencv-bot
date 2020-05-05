@@ -1,6 +1,6 @@
 attrs==19.3.0
 certifi==2019.9.11
-cffi==1.13.1
+cffi==1.14.0
 cryptography==2.8
 future==0.18.2
 gunicorn==20.0.4
