@@ -8,7 +8,7 @@ importlib-metadata==0.23
 more-itertools==7.2.0
 numpy==1.17.3
 opencv-contrib-python-headless==4.0.1.24
-opencv-python-headless==4.0.0.21
+opencv-python-headless==4.3.0.36
 packaging==20.3
 pluggy==0.13.1
 py==1.8.0
