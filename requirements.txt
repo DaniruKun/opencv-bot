@@ -7,7 +7,7 @@ gunicorn==20.0.4
 importlib-metadata==0.23
 more-itertools==7.2.0
 numpy==1.17.3
-opencv-contrib-python-headless==4.0.1.24
+opencv-contrib-python-headless==4.4.0.40
 opencv-python-headless==4.3.0.36
 packaging==20.3
 pluggy==0.13.1
