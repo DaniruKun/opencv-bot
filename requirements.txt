@@ -11,7 +11,7 @@ opencv-contrib-python-headless==4.0.1.24
 opencv-python-headless==4.3.0.36
 packaging==20.3
 pluggy==0.13.1
-py==1.8.0
+py==1.10.0
 pycparser==2.19
 pyparsing==2.4.7
 pytest==5.4.2
