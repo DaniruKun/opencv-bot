@@ -1,0 +1,36 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: importlib-metadata
+    versions:
+    - 3.10.0
+    - 3.10.1
+    - 3.4.0
+    - 3.6.0
+    - 3.7.0
+    - 3.7.2
+    - 3.7.3
+    - 3.9.0
+    - 4.0.0
+  - dependency-name: scipy
+    versions:
+    - 1.6.0
+    - 1.6.1
+    - 1.6.2
+  - dependency-name: numpy
+    versions:
+    - 1.19.5
+    - 1.20.0
+    - 1.20.1
+  - dependency-name: packaging
+    versions:
+    - "20.8"
+  - dependency-name: more-itertools
+    versions:
+    - 8.6.0
